@@ -1,16 +1,115 @@
-# React + Vite
+# Plataforma QA
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Plataforma web para el seguimiento y gestión de certificaciones QA mediante dashboards.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Para ejecutar el proyecto se requiere:
 
-## React Compiler
+- GitHub Desktop
+- Visual Studio Code
+- Node.js 24.x
+- npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Clonar el proyecto
 
-## Expanding the Oxlint configuration
+1. Aceptar la invitación al repositorio privado en GitHub.
+2. Abrir GitHub Desktop.
+3. Ir a `File → Clone repository`.
+4. Seleccionar el repositorio `plataforma-qa`.
+5. Elegir una carpeta local.
+6. Presionar `Clone`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Ejemplo de ubicación:
+
+```text
+C:\Proyectos\plataforma-qa
+```
+
+## Levantar el proyecto
+
+Abrir la carpeta clonada en Visual Studio Code.
+
+Luego abrir una terminal:
+
+```text
+Terminal → New Terminal
+```
+
+Verificar que la terminal esté ubicada en la carpeta del proyecto:
+
+```text
+C:\Proyectos\plataforma-qa
+```
+
+Instalar las dependencias:
+
+```bash
+npm install
+```
+
+Luego iniciar la aplicación:
+
+```bash
+npm run dev
+```
+
+Abrir en el navegador:
+
+```text
+http://localhost:5173
+```
+
+## Detener la aplicación
+
+En la terminal presionar:
+
+```text
+Ctrl + C
+```
+
+## Importante
+
+No ejecutar:
+
+```bash
+npm create vite
+```
+
+El proyecto ya está creado y debe ser clonado desde GitHub.
+
+La carpeta `node_modules` no se almacena en el repositorio, por lo que cada integrante debe ejecutar:
+
+```bash
+npm install
+```
+
+después de clonar el proyecto por primera vez.
+
+Actualmente algunos datos del prototipo se almacenan mediante `localStorage`, por lo que esos datos son locales a cada navegador y no se comparten mediante GitHub.
+
+## Roles actuales del prototipo
+
+- Administrador
+- Quality Engineer (QE)
+- Analista QA
+
+## Flujo de trabajo
+
+Antes de comenzar a trabajar:
+
+```text
+Fetch origin
+```
+
+Después de realizar cambios:
+
+```text
+Guardar cambios
+→ Commit
+→ Push origin
+```
+
+## Proyecto académico
+
+Proyecto desarrollado como parte de Capstone de Ingeniería en Informática.
