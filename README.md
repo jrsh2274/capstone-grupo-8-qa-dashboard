@@ -1,4 +1,4 @@
-# Plataforma QA
+# Plataforma QA Dashborad
 
 Plataforma web para el seguimiento y gestión de certificaciones QA mediante dashboards.
 
@@ -16,14 +16,14 @@ Para ejecutar el proyecto se requiere:
 1. Aceptar la invitación al repositorio privado en GitHub.
 2. Abrir GitHub Desktop.
 3. Ir a `File → Clone repository`.
-4. Seleccionar el repositorio `plataforma-qa`.
+4. Seleccionar el repositorio `capstone-grupo-8-qa-dashboard`.
 5. Elegir una carpeta local.
 6. Presionar `Clone`.
 
 Ejemplo de ubicación:
 
 ```text
-C:\Proyectos\plataforma-qa
+C:\Proyectos\capstone-grupo-8-qa-dashboard
 ```
 
 ## Levantar el proyecto
@@ -39,7 +39,7 @@ Terminal → New Terminal
 Verificar que la terminal esté ubicada en la carpeta del proyecto:
 
 ```text
-C:\Proyectos\plataforma-qa
+C:\Proyectos\capstone-grupo-8-qa-dashboard
 ```
 
 Instalar las dependencias:
