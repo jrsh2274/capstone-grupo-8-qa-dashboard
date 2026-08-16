@@ -21,7 +21,7 @@ const usuariosSimulados = [
   },
   {
     id: "qa-2",
-    nombre: "Pedro Soto",
+    nombre: "Matias Araos",
     rol: "Analista QA",
   },
   {
@@ -197,6 +197,7 @@ function App() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   const [errorFormulario, setErrorFormulario] = useState("");
+  const [historiaEditandoId, setHistoriaEditandoId] = useState(null);
 
   const [nuevaHistoria, setNuevaHistoria] = useState({
     id: "",
@@ -340,7 +341,9 @@ function App() {
   }
 
   function abrirNuevaHistoria() {
+    setHistoriaEditandoId(null);
     setErrorFormulario("");
+
 
     setNuevaHistoria({
       id: "",
@@ -359,6 +362,26 @@ function App() {
 
     setMostrarFormulario(true);
   }
+    function abrirEditarHistoria(historia) {
+      setErrorFormulario("");
+      setHistoriaEditandoId(historia.id);
+
+    setNuevaHistoria({
+      id: historia.id,
+      titulo: historia.titulo,
+      sprint: historia.sprint,
+      celula: historia.celula,
+      prioridad: historia.prioridad || "Media",
+      analistaId: historia.analistaId,
+      qeResponsableId: historia.qeResponsableId,
+      estado: historia.estado,
+      riesgo: historia.riesgo,
+  });
+
+  setMostrarFormulario(true);
+}
+
+
 
   function manejarCambioFormulario(evento) {
     const { name, value } = evento.target;
@@ -369,46 +392,113 @@ function App() {
     }));
   }
 
-  function crearHistoria(evento) {
-    evento.preventDefault();
+ function guardarHistoria(evento) {
+  evento.preventDefault();
 
-    const codigo = nuevaHistoria.id.trim().toUpperCase();
-    const titulo = nuevaHistoria.titulo.trim();
-    const celula = nuevaHistoria.celula.trim();
+  const codigo = nuevaHistoria.id.trim().toUpperCase();
+  const titulo = nuevaHistoria.titulo.trim();
+  const celula = nuevaHistoria.celula.trim();
 
-    if (!codigo || !titulo || !celula) {
-      setErrorFormulario(
-        "Completa código HU, descripción y célula."
-      );
-      return;
-    }
-
-    const existe = historias.some(
-      (historia) => historia.id.toUpperCase() === codigo
+  if (!codigo || !titulo || !celula) {
+    setErrorFormulario(
+      "Completa código HU, descripción y célula."
     );
+    return;
+  }
 
-    if (existe) {
-      setErrorFormulario(
-        `La historia ${codigo} ya existe.`
-      );
-      return;
-    }
-
-    const historiaCreada = {
-      ...nuevaHistoria,
-      id: codigo,
-      titulo,
-      celula,
-      bloqueo: "Sin bloqueo",
-      entregables: { ...entregablesVacios },
-    };
-
-    setHistorias((actuales) => [...actuales, historiaCreada]);
+  // Si estamos editando una HU existente
+  if (historiaEditandoId) {
+    setHistorias((actuales) =>
+      actuales.map((historia) =>
+        historia.id === historiaEditandoId
+          ? {
+              ...historia,
+              titulo,
+              sprint: nuevaHistoria.sprint,
+              celula,
+              prioridad: nuevaHistoria.prioridad,
+              analistaId: nuevaHistoria.analistaId,
+              qeResponsableId:
+                nuevaHistoria.qeResponsableId,
+              estado: nuevaHistoria.estado,
+              riesgo: nuevaHistoria.riesgo,
+            }
+          : historia
+      )
+    );
 
     setMostrarFormulario(false);
     setErrorFormulario("");
+    setHistoriaEditandoId(null);
     setHistoriaSeleccionadaId(codigo);
+
+    return;
   }
+
+  // Si estamos creando una HU nueva
+  const existe = historias.some(
+    (historia) =>
+      historia.id.toUpperCase() === codigo
+  );
+
+  if (existe) {
+    setErrorFormulario(
+      `La historia ${codigo} ya existe.`
+    );
+    return;
+  }
+
+  const historiaCreada = {
+    ...nuevaHistoria,
+    id: codigo,
+    titulo,
+    celula,
+    bloqueo: "Sin bloqueo",
+    entregables: { ...entregablesVacios },
+  };
+
+  setHistorias((actuales) => [
+    ...actuales,
+    historiaCreada,
+  ]);
+
+  setMostrarFormulario(false);
+  setErrorFormulario("");
+  setHistoriaEditandoId(null);
+  setHistoriaSeleccionadaId(codigo);
+}
+ function eliminarHistoria(historiaId) {
+  // Solo QE y Administrador pueden eliminar HU
+  if (
+    usuarioActual.rol !== "Administrador" &&
+    usuarioActual.rol !== "QE"
+  ) {
+    return;
+  }
+
+  const historia = historias.find(
+    (item) => item.id === historiaId
+  );
+
+  const confirmar = window.confirm(
+    `¿Deseas eliminar ${historiaId} - ${historia?.titulo}?`
+  );
+
+  if (!confirmar) {
+    return;
+  }
+
+  setHistorias((actuales) =>
+    actuales.filter(
+      (item) => item.id !== historiaId
+    )
+  );
+
+  // Si estaba abierto el detalle de esa HU, lo cerramos
+  if (historiaSeleccionadaId === historiaId) {
+    setHistoriaSeleccionadaId(null);
+  }
+}
 
   const puedeCrearHU =
     usuarioActual.rol === "Administrador" ||
@@ -522,11 +612,15 @@ function App() {
         {mostrarFormulario && (
           <form
             className="formulario-hu"
-            onSubmit={crearHistoria}
+            onSubmit={guardarHistoria}
           >
             <div className="cabecera-formulario">
               <div>
-                <h3>Nueva Historia de Usuario</h3>
+                <h3>
+                  {historiaEditandoId
+                    ? "Editar Historia de Usuario"
+                    : "Nueva Historia de Usuario"}
+                </h3>
                 <p>
                   Registra una HU para incorporarla al seguimiento QA.
                 </p>
@@ -678,7 +772,9 @@ function App() {
                 type="submit"
                 className="boton-nueva-hu"
               >
-                Crear HU
+                {historiaEditandoId
+                  ? "Guardar cambios"
+                  : "Crear HU"}
               </button>
             </div>
           </form>
@@ -737,105 +833,145 @@ function App() {
             Limpiar filtros
           </button>
         </div>
+<div className="tabla-contenedor">
+  <table>
+    <thead>
+      <tr>
+        <th>HU</th>
+        <th>Descripción</th>
+        <th>Célula</th>
+        <th>Analista QA</th>
+        <th>QE responsable</th>
+        <th>Estado</th>
+        <th>Cumplimiento</th>
+        <th>Riesgo</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
 
-        <div className="tabla-contenedor">
-          <table>
-            <thead>
-              <tr>
-                <th>HU</th>
-                <th>Descripción</th>
-                <th>Célula</th>
-                <th>Analista QA</th>
-                <th>QE responsable</th>
-                <th>Estado</th>
-                <th>Cumplimiento</th>
-                <th>Riesgo</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
+    <tbody>
+      {historiasFiltradas.map((historia) => {
+        const cumplimiento =
+          calcularCumplimiento(historia.entregables);
 
-            <tbody>
-              {historiasFiltradas.map((historia) => {
-                const cumplimiento =
-                  calcularCumplimiento(historia.entregables);
+        return (
+          <tr key={historia.id}>
 
-                return (
-                  <tr key={historia.id}>
-                    <td className="codigo">{historia.id}</td>
+            <td className="codigo">
+              {historia.id}
+            </td>
 
-                    <td>{historia.titulo}</td>
+            <td>
+              {historia.titulo}
+            </td>
 
-                    <td>{historia.celula}</td>
+            <td>
+              {historia.celula}
+            </td>
 
-                    <td>
-                      {obtenerNombreUsuario(historia.analistaId)}
-                    </td>
+            <td>
+              {obtenerNombreUsuario(historia.analistaId)}
+            </td>
 
-                    <td>
-                      {obtenerNombreUsuario(
-                        historia.qeResponsableId
-                      )}
-                    </td>
-
-                    <td>
-                      <span className="estado">
-                        {historia.estado}
-                      </span>
-                    </td>
-
-                    <td>
-                      <div className="avance">
-                        <div className="barra">
-                          <div
-                            className="barra-progreso"
-                            style={{
-                              width: `${cumplimiento}%`,
-                            }}
-                          />
-                        </div>
-
-                        <span>{cumplimiento}%</span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <span
-                        className={`riesgo riesgo-${historia.riesgo.toLowerCase()}`}
-                      >
-                        {historia.riesgo}
-                      </span>
-                    </td>
-
-                    <td>
-                      <button
-                        type="button"
-                        className="boton-detalle"
-                        onClick={() =>
-                          setHistoriaSeleccionadaId(historia.id)
-                        }
-                      >
-                        Ver detalle
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-
-              {historiasFiltradas.length === 0 && (
-                <tr>
-                  <td
-                    colSpan="9"
-                    className="sin-resultados"
-                  >
-                    No existen historias que coincidan con los filtros.
-                  </td>
-                </tr>
+            <td>
+              {obtenerNombreUsuario(
+                historia.qeResponsableId
               )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+            </td>
 
+            <td>
+              <span className="estado">
+                {historia.estado}
+              </span>
+            </td>
+
+            <td>
+              <div className="avance">
+
+                <div className="barra">
+                  <div
+                    className="barra-progreso"
+                    style={{
+                      width: `${cumplimiento}%`,
+                    }}
+                  />
+                </div>
+
+                <span>
+                  {cumplimiento}%
+                </span>
+
+              </div>
+            </td>
+
+            <td>
+              <span
+                className={`riesgo riesgo-${historia.riesgo.toLowerCase()}`}
+              >
+                {historia.riesgo}
+              </span>
+            </td>
+
+            <td>
+              <div className="acciones-tabla">
+
+                <button
+                  type="button"
+                  className="boton-detalle"
+                  onClick={() =>
+                    setHistoriaSeleccionadaId(historia.id)
+                  }
+                >
+                  Ver detalle
+                </button>
+
+                {(usuarioActual.rol === "Administrador" ||
+                  usuarioActual.rol === "QE") && (
+                  <>
+                    <button
+                      type="button"
+                      className="boton-editar"
+                      onClick={() =>
+                        abrirEditarHistoria(historia)
+                      }
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      type="button"
+                      className="boton-eliminar"
+                      onClick={() =>
+                        eliminarHistoria(historia.id)
+                      }
+                    >
+                      Eliminar
+                    </button>
+                  </>
+                )}
+
+              </div>
+            </td>
+
+          </tr>
+        );
+      })}
+
+      {historiasFiltradas.length === 0 && (
+        <tr>
+          <td
+            colSpan="9"
+            className="sin-resultados"
+          >
+            No existen historias que coincidan con los filtros.
+          </td>
+        </tr>
+      )}
+
+    </tbody>
+  </table>
+</div>
+</section>
       {historiaSeleccionada && (
         <section
           ref={detalleRef}
