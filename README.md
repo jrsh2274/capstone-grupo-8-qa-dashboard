@@ -1,4 +1,4 @@
-# Plataforma QA
+# Plataforma QA Dashboard
 
 Plataforma web para el seguimiento y gestión de certificaciones QA mediante dashboards.
 
