@@ -363,3 +363,38 @@ tbody tr:hover {
 .boton-eliminar:hover {
   background-color: #fef2f2;
 }
+.marca-quality {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.logo-quality {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.marca-texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.nombre-quality {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0b2d5c;
+  line-height: 1.1;
+}
+
+.subtitulo-quality {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.sprint-info {
+  margin-top: 4px;
+  color: #64748b;
+}

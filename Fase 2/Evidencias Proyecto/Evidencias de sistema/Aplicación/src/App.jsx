@@ -541,23 +541,34 @@ function App() {
           </select>
         </label>
       </section>
+      
+<header className="encabezado">
+  <div className="marca-quality">
+    <img
+      src="/quality360-logo.png"
+      alt="Logo Quality360"
+      className="logo-quality"
+    />
 
-      <header className="encabezado">
-        <p className="etiqueta">
-          Plataforma de seguimiento QA
-        </p>
+    <div className="marca-texto">
+      <span className="nombre-quality">Quality360</span>
+      <span className="subtitulo-quality">
+        Gestión integral de certificaciones QA
+      </span>
+    </div>
+  </div>
 
-        <h1>
-          {usuarioActual.rol === "Analista QA"
-            ? "Mis Historias de Usuario"
-            : "Estado de Historias de Usuario"}
-        </h1>
+  <h1>
+    {usuarioActual.rol === "Analista QA"
+      ? "Mis Historias de Usuario"
+      : "Estado de Historias de Usuario"}
+  </h1>
 
-        <p>
-          Sprint 1 · Seguimiento operativo y metodológico
-        </p>
-      </header>
-
+  <p className="sprint-info">
+    Sprint 1 · Seguimiento operativo y metodológico
+  </p>
+</header>
+  
       <section className="metricas">
         <article className="tarjeta">
           <span>
