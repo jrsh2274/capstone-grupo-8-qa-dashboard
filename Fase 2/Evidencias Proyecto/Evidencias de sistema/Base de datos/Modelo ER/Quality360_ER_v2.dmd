@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="Quality360_ER_v2" id="8EF0531D-174F-1C79-EEAE-C1C20EEF844A" version="3.5">
+<createdBy>Renato</createdBy>
+<createdTime>2026-10-10 04:59:03 UTC</createdTime>
+<ownerDesignName>Quality360_ER_v2</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>8EF0531D-174F-1C79-EEAE-C1C20EEF844A</designId>
+</OSDM_Design>
