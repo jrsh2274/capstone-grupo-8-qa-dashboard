@@ -1,0 +1,1 @@
+Carpeta destinada a las evidencias correspondientes a esta sección de la Fase 2.
